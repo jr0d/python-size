@@ -17,7 +17,7 @@ from setuptools import setup
 
 setup(
     name='python-size',
-    version='0.0.9',
+    version='0.0.9.1',
     packages=['size'],
     url='',
     license='Apache-2.0',

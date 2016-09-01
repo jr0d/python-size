@@ -17,7 +17,26 @@
 Taken from the press project
 """
 
+import sys
+
 from decimal import Decimal, InvalidOperation
+
+
+__PYTHON_2 = sys.version_info[0] == 2
+
+
+def check_int_type(o):
+    if __PYTHON_2:
+        # noinspection PyUnresolvedReferences
+        return isinstance(o, (int, long))
+    return isinstance(o, int)
+
+
+def check_str_type(o):
+    if __PYTHON_2:
+        # noinspection PyUnresolvedReferences
+        return isinstance(o, (str, unicode))
+    return isinstance(o, str)
 
 
 class SizeObjectValError(Exception):
@@ -98,7 +117,7 @@ class Size(object):
         if isinstance(value, Size):
             return value.bytes
 
-        if isinstance(value, (int, long)):
+        if check_int_type(value):
             if value > self.yobibyte:
                 raise SizeObjectValError('Value is impossibly large.')
             return value
@@ -106,7 +125,7 @@ class Size(object):
         if isinstance(value, (float, Decimal)):
             return int(round(value))
 
-        if not isinstance(value, (str, unicode)):
+        if not check_str_type(value):
             raise SizeObjectValError(
                 'Value is not in a format I can understand')
 
