@@ -183,6 +183,10 @@ class Size(object):
     def megabytes(self):
         return Decimal(self.bytes) / self.megabyte
 
+    @property
+    def mebibytes(self):
+        return Decimal(self.bytes) / self.mebibyte
+
     def __repr__(self):
         rep = '<%s> : %ib' % (self.__class__.__name__, self.bytes)
         return rep
