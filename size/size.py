@@ -16,7 +16,6 @@
 """
 Taken from the press project
 """
-
 import sys
 
 from decimal import Decimal, InvalidOperation
@@ -41,6 +40,15 @@ def check_str_type(o):
 
 class SizeObjectValError(Exception):
     pass
+
+
+PY3 = sys.version_info[0] == 3
+
+if PY3:
+    string_types = str,
+else:
+    # noinspection PyCompatibility,PyUnresolvedReferences
+    string_types = basestring,
 
 
 class Size(object):
@@ -125,9 +133,9 @@ class Size(object):
         if isinstance(value, (float, Decimal)):
             return int(round(value))
 
-        if not check_str_type(value):
+        if not isinstance(value, string_types):
             raise SizeObjectValError(
-                'Value is not in a format I can understand')
+                'Value is not in a format I can understand : {} - {}'.format(type(value), value))
 
         if value.isdigit():
             return int(value)
@@ -141,7 +149,7 @@ class Size(object):
                 break
         if not suffix_index:
             raise SizeObjectValError(
-                'Value is not in a format I can understand. Invalid Suffix.')
+                'Value is not in a format I can understand. Invalid Suffix. {}'.format(value))
 
         val, suffix = value[:suffix_index].strip(), value[suffix_index:].strip()
 
@@ -169,7 +177,7 @@ class Size(object):
         for idx in range(1, len(units)):
             if self.bytes < self.symbols[units[idx]]:
                 unit = units[idx - 1]
-                return '%s %s' % (Decimal(self.bytes) / self.symbols[unit], unit)
+                return '%s %s' % (round(Decimal(self.bytes) / self.symbols[unit]), unit)
 
         raise SizeObjectValError('Something very strange has happened.')
 
