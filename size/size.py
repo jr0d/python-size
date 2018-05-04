@@ -38,7 +38,7 @@ def check_str_type(o):
     return isinstance(o, str)
 
 
-class SizeObjectValError(Exception):
+class SizeObjectValError(ValueError):
     pass
 
 
